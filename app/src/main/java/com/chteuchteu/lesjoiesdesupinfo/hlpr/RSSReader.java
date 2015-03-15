@@ -3,8 +3,6 @@ package com.chteuchteu.lesjoiesdesupinfo.hlpr;
 import com.chteuchteu.gifapplicationlibrary.async.DataSourceParser;
 import com.chteuchteu.gifapplicationlibrary.obj.Gif;
 
-import org.jsoup.Jsoup;
-import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -16,8 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -43,13 +39,7 @@ public class RSSReader {
 					g.setName(readNode(element, "title"));
 					g.setArticleUrl(readNode(element, "link"));
 					g.setDate(gMTDateToFrench3(readNode(element, "pubDate")));
-					
-					String content = readNode(element, "content:encoded");
-					if (content.contains("<![CDATA["))
-						content = content.substring("<![CDATA[".length(), content.length() - "]]>".length());
-					org.jsoup.nodes.Document c = Jsoup.parse(content);
-					Elements pngs = c.select("img[src$=.gif]");
-					g.setGifUrl(pngs.get(0).attr("src"));
+					g.setGifUrl(readNode(element, "description"));
 					l.add(g);
 					
 					int percentage = i * 100 / nodes.getLength() / 2 + 50;
@@ -101,12 +91,12 @@ public class RSSReader {
 	
 	private static String gMTDateToFrench3(String gmtDate) {
 		try {
-			SimpleDateFormat dfGMT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+			SimpleDateFormat dfGMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 			dfGMT.parse(gmtDate);
 			SimpleDateFormat dfFrench = new SimpleDateFormat("d/MM", Locale.FRANCE);
 			return dfFrench.format(dfGMT.getCalendar().getTime());
 		} catch (ParseException ex) {
-			Logger.getLogger(RSSReader.class.getName()).log(Level.SEVERE, null, ex);
+			ex.printStackTrace();
 		}
 		return "";
 	}

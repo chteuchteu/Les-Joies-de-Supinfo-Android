@@ -12,6 +12,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,13 +20,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 public class RSSReader {
-	public static List<Gif> parse(String feedurl, DataSourceParser thread) {
+	public static List<Gif> parse(String feedUrl, DataSourceParser thread) {
 		List<Gif> l = new ArrayList<>();
 		try {
 			if (thread != null)
 				thread.manualPublishProgress(10);
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			URL url = new URL(feedurl);
+			URL url = new URL(feedUrl);
 			Document doc = builder.parse(url.openStream());
 
 			if (thread != null)
@@ -38,7 +39,7 @@ public class RSSReader {
 					Gif g = new Gif();
 					g.setName(readNode(element, "title"));
 					g.setArticleUrl(readNode(element, "link"));
-					g.setDate(gMTDateToFrench3(readNode(element, "pubDate")));
+					g.setDate(parseDate(readNode(element, "pubDate")));
 					g.setGifUrl(readNode(element, "description"));
 					l.add(g);
 					
@@ -89,15 +90,14 @@ public class RSSReader {
 		return null;
 	}
 	
-	private static String gMTDateToFrench3(String gmtDate) {
+	private static Calendar parseDate(String gmtDate) {
 		try {
 			SimpleDateFormat dfGMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 			dfGMT.parse(gmtDate);
-			SimpleDateFormat dfFrench = new SimpleDateFormat("d/MM", Locale.FRANCE);
-			return dfFrench.format(dfGMT.getCalendar().getTime());
+			return dfGMT.getCalendar();
 		} catch (ParseException ex) {
 			ex.printStackTrace();
+			return null;
 		}
-		return "";
 	}
 }

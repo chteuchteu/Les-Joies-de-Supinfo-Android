@@ -81,9 +81,9 @@ public class RSSReader {
 			for (int i = 0; i < listChild.getLength(); i++) {
 				Node child = listChild.item(i);
 				if (child != null) {
-					if ((child.getNodeName() != null && (_name.equals(child.getNodeName()))) || (child.getLocalName() != null && (_name.equals(child.getLocalName())))) {
+					if ((child.getNodeName() != null && (_name.equals(child.getNodeName())))
+							|| (child.getLocalName() != null && _name.equals(child.getLocalName())))
 						return child;
-					}
 				}
 			}
 		}

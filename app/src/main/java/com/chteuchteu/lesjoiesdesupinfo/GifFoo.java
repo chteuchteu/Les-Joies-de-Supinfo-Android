@@ -15,14 +15,14 @@ public class GifFoo {
 	public static GifApplicationBundle getApplicationBundle(Context context) {
 		return new GifApplicationBundle(
 				context.getString(R.string.app_name),
-				"http://192.168.0.10:8080/feed.php",
+				"http://joies-de-supinfo.s-quent.in/feed",
 				new IDataSourceParser() {
 					@Override
 					public List<Gif> parseDataSource(String dataSourceUrl) {
 						return RSSReader.parse(dataSourceUrl, null);
 					}
 				},
-				"lesJoiesdelEtudiantInfo",
+				"lesJoiesDeSupinfo",
 				context.getString(R.string.about),
 				Activity_Main.class,
 				NotificationService.class

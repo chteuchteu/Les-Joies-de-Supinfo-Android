@@ -41,6 +41,11 @@ public class RSSReader {
 					g.setArticleUrl(readNode(element, "link"));
 					g.setDate(parseDate(readNode(element, "pubDate")));
 					g.setGifUrl(readNode(element, "description"));
+
+					// Check if this is a gif. If not, since we can't read it, let's just skip it
+					if (!g.getFileType().equals("gif"))
+						continue;
+
 					l.add(g);
 					
 					int percentage = i * 100 / nodes.getLength() / 2 + 50;
